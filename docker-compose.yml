@@ -1,0 +1,32 @@
+services:
+  # Contenedor para pruebas
+  test-container:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    profiles:
+      - testing
+
+  # Servidor de Aplicación
+  app-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    ports:
+      - "8080:8080"
+    profiles:
+      - application
+
+  # Servidor de Automatización (Jenkins)
+  jenkins:
+    image: jenkins/jenkins:lts
+    ports:
+      - "8081:8080"       
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    profiles:
+      - automation
+
+volumes:
+  jenkins_home:
