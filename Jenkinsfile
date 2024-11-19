@@ -4,29 +4,24 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Compilando la aplicación...'
-                sh 'mvn clean install'
-            }
-        }
-        
-        stage('Test') {
-            steps {
-                echo 'Ejecutando pruebas...'
-                sh 'mvn test'
-            }
-        }
-        
-        stage('Package') {
-            steps {
-                echo 'Empaquetando la aplicación...'
-                sh 'mvn package'
+                echo 'Compilando la aplicación con Docker Compose...'
+                sh 'docker-compose up --build test-container'
             }
         }
 
-        stage('Run Application') {
+        stage('Test') {
             steps {
-                echo 'Desplegando la aplicación...'
-                sh 'java -jar target/*.jar'
+                echo 'Ejecutando pruebas con Docker Compose...'
+                sh 'docker-compose run --rm test-container'
+            }
+        }
+
+        stage('Package and Deploy') {
+            steps {
+                echo 'Empaquetando y desplegando la aplicación...'
+                sh '''
+                    docker-compose up --build -d app-server
+                '''
             }
         }
     }
