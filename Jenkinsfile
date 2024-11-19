@@ -1,31 +1,34 @@
 pipeline {
     agent any
-
     stages {
         stage('Build') {
             steps {
                 echo 'Compilando la aplicación con Docker Compose...'
-                sh 'docker-compose up --build test-container'
+                sh 'docker-compose -f docker-compose.yml up --build'
             }
         }
-
+        
         stage('Test') {
             steps {
-                echo 'Ejecutando pruebas con Docker Compose...'
-                sh 'docker-compose run --rm test-container'
+                echo 'Ejecutando pruebas dentro del contenedor...'
+                sh 'docker exec -t <nombre_del_contenedor> mvn test'
+            }
+        }
+        
+        stage('Package') {
+            steps {
+                echo 'Empaquetando la aplicación...'
+                sh 'docker exec -t <nombre_del_contenedor> mvn package'
             }
         }
 
-        stage('Package and Deploy') {
+        stage('Run Application') {
             steps {
-                echo 'Empaquetando y desplegando la aplicación...'
-                sh '''
-                    docker-compose up --build -d app-server
-                '''
+                echo 'Desplegando la aplicación...'
+                sh 'docker-compose up -d'
             }
         }
     }
-
     post {
         success {
             echo 'Pipeline completado con éxito.'
