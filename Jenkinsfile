@@ -6,7 +6,7 @@ pipeline {
             steps {
                 echo 'Construyendo la aplicación con Docker Compose...'
                 script {
-                    sh "docker-compose -f docker-compose.yml up --profile application --build -d"
+                    sh "docker-compose --profile application -f docker-compose.yml up --build -d"
                 }
             }
         }
@@ -15,7 +15,7 @@ pipeline {
             steps {
                 echo 'Ejecutando pruebas dentro del contenedor...'
                 script {
-                    sh "docker-compose -f docker-compose.yml up --profile testing --build -d"
+                    sh "docker-compose --profile testing -f docker-compose.yml up  --build -d"
                 }
             }
         }
