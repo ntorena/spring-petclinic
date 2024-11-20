@@ -1,5 +1,7 @@
 pipeline {
     agent any
+
+    stages {
         stage('Build') {
             steps {
                 echo 'Construyendo la aplicación con Docker Compose...'
@@ -46,4 +48,4 @@ pipeline {
             echo 'El pipeline ha fallado.'
         }
     }
-
+}
