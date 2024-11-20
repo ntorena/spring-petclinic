@@ -1,22 +1,10 @@
 pipeline {
     agent any
-    environment {
-        DOCKER_COMPOSE = '/usr/local/bin/docker-compose'  // Ruta al docker-compose del host
-    }
-    stages {
-        stage('Checkout') {
-            steps {
-                echo 'Clonando el repositorio...'
-                checkout scm  // Clona el repositorio donde está tu código
-            }
-        }
-        
         stage('Build') {
             steps {
                 echo 'Construyendo la aplicación con Docker Compose...'
                 script {
-                    // Aquí ejecutas docker-compose en el host para levantar los contenedores
-                    sh "${DOCKER_COMPOSE} -f docker-compose.yml up --build -d"
+                    sh "docker-compose -f docker-compose.yml up --profile application --build -d"
                 }
             }
         }
@@ -25,28 +13,26 @@ pipeline {
             steps {
                 echo 'Ejecutando pruebas dentro del contenedor...'
                 script {
-                    // Ejecuta pruebas dentro del contenedor de la aplicación
-                    sh "${DOCKER_COMPOSE} exec <nombre_del_contenedor> mvn test"
+                    sh "docker-compose -f docker-compose.yml up --profile testing --build -d"
                 }
             }
         }
 
-        stage('Package') {
+        stage('Verify Deployment') {
             steps {
-                echo 'Empaquetando la aplicación dentro del contenedor...'
+                echo 'Verificando el despliegue...'
                 script {
-                    // Empaque la aplicación dentro del contenedor de la aplicación
-                    sh "${DOCKER_COMPOSE} exec <nombre_del_contenedor> mvn package"
+                    sh 'docker ps'
+                    sh 'curl -I http://localhost:8080'
                 }
             }
         }
 
-        stage('Deploy') {
+        stage('Cleanup') {
             steps {
-                echo 'Desplegando la aplicación en contenedor...'
+                echo 'Limpiando recursos antiguos...'
                 script {
-                    // Levanta la aplicación en el contenedor
-                    sh "${DOCKER_COMPOSE} up -d"
+                    sh 'docker-compose down'
                 }
             }
         }
@@ -60,4 +46,4 @@ pipeline {
             echo 'El pipeline ha fallado.'
         }
     }
-}
+
