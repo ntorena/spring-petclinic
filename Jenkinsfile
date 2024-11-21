@@ -16,13 +16,10 @@ pipeline {
             steps {
                 echo 'Ejecutando pruebas dentro del contenedor...'
                script {
-            // Levantar contenedor de pruebas
             sh "docker-compose --profile testing -f docker-compose.yml up --build -d"
             
-            // Mostrar logs del contenedor para ver la salida de las pruebas
             sh "docker-compose logs test-container"
             
-            // Detener y eliminar los contenedores después de las pruebas
             }
         }
         }

@@ -17,7 +17,20 @@ services:
     profiles:
       - application
 
-  # Servidor de Automatización (Jenkins)
+  #Servidor de Pruebas Automatizadas
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.automationTest
+    depends_on:
+      - app-server
+    environment:
+      TEST_ENV: "integration"
+    network_mode: service:app-server
+    profiles:
+      - automation
+
+  # Servidor de Jenkins
   jenkins:
     image: jenkins/jenkins:lts
     ports:
@@ -28,7 +41,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker-compose:/usr/bin/docker-compose
     profiles:
-      - automation
+      - jenkins
     environment:
       - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
 

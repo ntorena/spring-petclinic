@@ -1,0 +1,13 @@
+FROM maven:3.8-openjdk-17
+
+# Instala navegadores y controladores necesarios
+RUN apt-get update && apt-get install -y \
+    chromium-browser \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copia los tests al contenedor
+WORKDIR /tests
+COPY . .
+
+# Ejecuta los tests
+ENTRYPOINT ["mvn", "test"]
