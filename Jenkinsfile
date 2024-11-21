@@ -2,13 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                echo 'Clonando el repositorio...'
-                checkout scm
-            }
-        }
-        
+
         stage('Build') {
             steps {
                 echo 'Construyendo la aplicación con Docker Compose...'
