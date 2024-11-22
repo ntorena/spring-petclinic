@@ -12,7 +12,7 @@ pipeline {
             }
         }
         
-        stage('Test') {
+        stage('Run Unit Tests') {
             steps {
                 echo 'Ejecutando pruebas dentro del contenedor...'
                script {
@@ -40,7 +40,8 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/ntorena/spring-clinic-test-automation.git'
             }
         }
-        stage('Run Tests in Docker') {
+
+        stage('Run Automated Tests') {
             steps {
                 script {
                     // Ejecutar pruebas en el contenedor
@@ -49,6 +50,7 @@ pipeline {
                     }
                 }
             }
+        }
 
         stage('Cleanup') {
             steps {
