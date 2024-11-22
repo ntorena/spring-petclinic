@@ -6,6 +6,8 @@ services:
       dockerfile: Dockerfile.test
     profiles:
       - testing
+    networks:
+      - shared-network
 
   # Servidor de Aplicación
   app-server:
@@ -16,19 +18,20 @@ services:
       - "8080:8080"
     profiles:
       - application
+    networks:
+      - shared-network
 
   #Servidor de Pruebas Automatizadas
   test-runner:
     build:
       context: .
       dockerfile: Dockerfile.automationTest
-    depends_on:
-      - app-server
     environment:
       TEST_ENV: "integration"
-    network_mode: service:app-server
     profiles:
       - automation
+    networks:
+      - shared-network
 
   # Servidor de Jenkins
   jenkins:
@@ -44,6 +47,12 @@ services:
       - jenkins
     environment:
       - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+    networks:
+      - shared-network
 
 volumes:
   jenkins_home:
+
+networks:
+  shared-network:
+    driver: bridge

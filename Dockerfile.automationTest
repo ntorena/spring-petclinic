@@ -1,13 +1,12 @@
-FROM maven:3.8-openjdk-17
+# Imagen base con Maven y JDK
+FROM maven:3.9.5-eclipse-temurin-17
 
-# Instala navegadores y controladores necesarios
-RUN apt-get update && apt-get install -y \
-    chromium-browser \
-    && rm -rf /var/lib/apt/lists/*
-
-# Copia los tests al contenedor
+# Establecer directorio de trabajo
 WORKDIR /tests
+
+# Copiar archivos del repositorio al contenedor
 COPY . .
 
-# Ejecuta los tests
-ENTRYPOINT ["mvn", "test"]
+# Comando para limpiar, compilar y ejecutar pruebas
+CMD ["mvn", "clean", "test"]
+

@@ -34,6 +34,22 @@ pipeline {
             }
         }
 
+        stage('Checkout') {
+            steps {
+                // Clonar el repositorio del proyecto
+                git branch: 'main', url: 'https://github.com/ntorena/spring-clinic-test-automation.git'
+            }
+        }
+        stage('Run Tests in Docker') {
+            steps {
+                script {
+                    // Ejecutar pruebas en el contenedor
+                    docker.image('spring-petclinic-main-test-runner').inside {
+                        sh 'mvn clean test'
+                    }
+                }
+            }
+
         stage('Cleanup') {
             steps {
                 echo 'Limpiando recursos antiguos...'
@@ -52,4 +68,5 @@ pipeline {
             echo 'El pipeline ha fallado.'
         }
     }
+}
 }
