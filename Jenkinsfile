@@ -2,15 +2,41 @@ pipeline {
     agent any
 
     stages {
-
-        stage('Run Automated Tests') {
+        stage('Build') {
             steps {
+                echo 'Construyendo la aplicación con Docker Compose...'
                 script {
-                    // Ejecutar pruebas en el contenedor
-                    docker.image('spring-petclinic-main-test-runner').inside {
-                        sh 'mvn clean test'
-                    }
+                    sh "docker-compose --profile application -f docker-compose.yml up --build -d"
                 }
+            }
+        }
+        
+        stage('Run Unit Tests') {
+            steps {
+                echo 'Ejecutando pruebas dentro del contenedor...'
+               script {
+            sh "docker-compose --profile testing -f docker-compose.yml up --build -d"
+            
+            sh "docker-compose logs test-container"
+            sh "mvn test"
+            
+                }
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                echo 'Verificando el despliegue...'
+                script {
+                    sh 'docker ps'
+                    sh 'curl -I http://localhost:8080'
+                }
+            }
+        }
+
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/ntorena/spring-clinic-test-automation.git'
             }
         }
 
