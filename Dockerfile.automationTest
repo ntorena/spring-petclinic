@@ -1,7 +1,33 @@
 # Usamos una imagen base de Maven con JDK
 FROM maven:3.8.4-openjdk-17-slim
 
-# Establecer directorio de trabajo
+# Configura variables de entorno para evitar prompts interactivos
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Actualiza e instala las dependencias necesarias
+RUN apt-get update && apt-get install -y \
+    wget \
+    ca-certificates \
+    fonts-liberation \
+    libasound2 \
+    libnspr4 \
+    libnss3 \
+    xdg-utils \
+    --no-install-recommends && \
+    rm -rf /var/lib/apt/lists/*
+
+# Añade el repositorio de Chromium más reciente y actualiza
+RUN if ! command -v chromium &> /dev/null; then \
+    echo "Installing Chromium..."; \
+    apt-get update && apt-get install -y chromium && rm -rf /var/lib/apt/lists/*; \
+    else \
+    echo "Chromium is already installed."; \
+    fi
+
+# Verifica la instalación
+RUN chromium --version
+
+# Establece el directorio de trabajo
 WORKDIR /tests
 
 # Copiar archivos del repositorio al contenedor
@@ -9,4 +35,3 @@ COPY . .
 
 # Comando para limpiar, compilar y ejecutar pruebas
 CMD ["mvn", "clean", "test"]
-
