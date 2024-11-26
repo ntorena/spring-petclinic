@@ -49,7 +49,6 @@ pipeline {
             }
         }
     }
-}
     post {
         success {
             echo 'El pipeline ha finalizado con éxito.'
