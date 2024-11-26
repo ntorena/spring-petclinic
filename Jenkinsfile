@@ -15,7 +15,7 @@ pipeline {
             steps {
                 echo 'Ejecutando pruebas dentro del contenedor...'
                script {
-                    sh "docker exec spring-petclinicpipeline-app-server-1 mvn test"
+                    sh "mvn test"
             
                 }
             }
