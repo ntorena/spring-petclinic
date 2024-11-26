@@ -15,7 +15,7 @@ pipeline {
             steps {
                 echo 'Ejecutando pruebas dentro del contenedor...'
                script {
-                    sh "mvn test"
+                    sh "docker exec spring-petclinicpipeline-app-server-1 mvn test"
             
                 }
             }
@@ -38,6 +38,7 @@ pipeline {
                 }
             }
         }
+    }
 
         stage('Cleanup') {
             steps {
