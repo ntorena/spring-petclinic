@@ -31,13 +31,7 @@ pipeline {
             }
         }
 
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/ntorena/spring-clinic-test-automation.git'
-            }
-        }
-
-        stage('Run Automated Tests') {
+                stage('Run Automated Tests') {
             steps {
                 script {
                    // docker.image('spring-petclinic-main-test-runner').inside {
@@ -45,6 +39,12 @@ pipeline {
                         sh 'mvn clean test'
                   //  }
                 }
+            }
+        }
+
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/ntorena/spring-clinic-test-automation.git'
             }
         }
 
