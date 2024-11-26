@@ -15,36 +15,27 @@ pipeline {
             steps {
                 echo 'Ejecutando pruebas dentro del contenedor...'
                script {
-            sh "docker-compose --profile testing -f docker-compose.yml up --build -d"
+                    sh "mvn test"
             
                 }
             }
         }
 
-        stage('Verify Deployment') {
+        stage('Run Automated Tests') {
             steps {
-                echo 'Verificando el despliegue...'
                 script {
-                    sh 'docker ps'
-                    sh 'curl -I http://localhost:8080'
-                }
-            }
-        }
+                    echo "Clonando el repositorio de pruebas automatizadas..."
+                    git branch: 'main', url: 'https://github.com/ntorena/spring-clinic-test-automation.git'
 
-                stage('Run Automated Tests') {
-            steps {
-                script {
-                   // docker.image('spring-petclinic-main-test-runner').inside {
-                        sh 'docker-compose --profile automation -f docker-compose.yml up --build -d'
+                    echo "Ejecutando pruebas automatizadas con Maven..."
+                    dir('spring-clinic-test-automation') {
                         sh 'mvn clean test'
-                  //  }
-                }
             }
-        }
 
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/ntorena/spring-clinic-test-automation.git'
+                    echo "Generando reportes de pruebas..."
+                    dir('spring-clinic-test-automation') {
+                        sh 'mvn surefire-report:report'
+                }
             }
         }
 
@@ -64,6 +55,7 @@ pipeline {
         }
         failure {
             echo 'El pipeline ha fallado.'
+            }
         }
     }
 }
