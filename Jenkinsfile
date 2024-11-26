@@ -24,18 +24,13 @@ pipeline {
         stage('Run Automated Tests') {
             steps {
                 script {
-                    echo "Clonando el repositorio de pruebas automatizadas..."
                     git branch: 'main', url: 'https://github.com/ntorena/spring-clinic-test-automation.git'
 
                     echo "Ejecutando pruebas automatizadas con Maven..."
-                    dir('spring-clinic-test-automation') {
                         sh 'mvn clean test'
-            }
 
                     echo "Generando reportes de pruebas..."
-                    dir('spring-clinic-test-automation') {
                         sh 'mvn surefire-report:report'
-                }
             }
         }
     }
