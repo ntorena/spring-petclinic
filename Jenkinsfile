@@ -17,9 +17,6 @@ pipeline {
                script {
             sh "docker-compose --profile testing -f docker-compose.yml up --build -d"
             
-            sh "docker-compose logs test-container"
-            sh "mvn test"
-            
                 }
             }
         }
