@@ -41,6 +41,7 @@ pipeline {
             steps {
                 script {
                     docker.image('spring-petclinic-main-test-runner').inside {
+                        sh 'docker-compose --profile automation -f docker-compose.yml up --build -d'
                         sh 'mvn clean test'
                     }
                 }
