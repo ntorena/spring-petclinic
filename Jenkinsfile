@@ -35,9 +35,9 @@ pipeline {
                     // Crear contenedor de pruebas dinámicamente
                     sh """
                     docker run --rm \
-                        --network app-network \
+                        --network bridge \
                         -v "/var/jenkins_home/workspace/Spring-Petclinic Pipeline:/tests" \
-                        selenium/standalone-chrome:latest \
+                        seleniarm/standalone-chromium \
                         bash -c 'cd /tests && mvn clean test'
                     """
                 }
