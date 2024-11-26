@@ -40,6 +40,16 @@ pipeline {
             }
         }
 
+        stage('Run Automated Tests') {
+            steps {
+                script {
+                    docker.image('spring-petclinic-main-test-runner').inside {
+                        sh 'mvn clean test'
+                    }
+                }
+            }
+        }
+
         stage('Cleanup') {
             steps {
                 echo 'Limpiando recursos antiguos...'

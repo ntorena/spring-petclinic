@@ -7,9 +7,6 @@ WORKDIR /app
 # Copia el archivo `pom.xml` y otros archivos de configuración de Maven
 COPY pom.xml ./
 
-# Descarga las dependencias sin construir el proyecto
-RUN mvn dependency:go-offline
-
 # Copia todo el código fuente al contenedor
 COPY src ./src
 
