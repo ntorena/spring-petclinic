@@ -21,19 +21,42 @@ pipeline {
             }
         }
 
-        stage('Run Automated Tests') {
+                stage('Clone Test Repository') {
             steps {
-                script {
-                    git branch: 'main', url: 'https://github.com/ntorena/spring-clinic-test-automation.git'
-
-                    echo "Ejecutando pruebas automatizadas con Maven..."
-                        sh 'mvn clean test'
-
-                    echo "Generando reportes de pruebas..."
-                        sh 'mvn surefire-report:report'
+                echo 'Clonando el repositorio de pruebas automatizadas...'
+                git branch: 'main', url: 'https://github.com/ntorena/spring-clinic-test-automation.git'
             }
         }
-    }
+
+        stage('Run Automated Tests') {
+            steps {
+                echo 'Ejecutando pruebas automatizadas en un contenedor separado...'
+                script {
+                    // Crear contenedor de pruebas dinámicamente
+                    sh """
+                    docker run --rm \
+                        --network app-network \
+                        -v "/var/jenkins_home/workspace/Spring-Petclinic Pipeline:/tests" \
+                        selenium/standalone-chrome:latest \
+                        bash -c 'cd /tests && mvn clean test'
+                    """
+                }
+            }
+        }
+
+    //     stage('Run Automated Tests') {
+    //         steps {
+    //             script {
+    //                 git branch: 'main', url: 'https://github.com/ntorena/spring-clinic-test-automation.git'
+
+    //                 echo "Ejecutando pruebas automatizadas con Maven..."
+    //                     sh 'mvn clean test'
+
+    //                 echo "Generando reportes de pruebas..."
+    //                     sh 'mvn surefire-report:report'
+    //         }
+    //     }
+    // }
 
         stage('Cleanup') {
             steps {
