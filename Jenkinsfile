@@ -33,17 +33,27 @@ pipeline {
                 echo 'Ejecutando pruebas automatizadas en un contenedor separado...'
                 script {
                     // Crear contenedor de pruebas dinámicamente
-                    sh """
-    if [ \$(docker ps -aq -f name=selenium-maven-arm-container) ]; then
-        docker start selenium-maven-arm-container
-        docker exec selenium-maven-arm-container bash -c 'cd "/tests/Spring-Petclinic Pipeline" && mvn clean test'
+                sh """
+    # Verifica si existe un contenedor llamado 'selenium-test-1'
+    if [ \$(docker ps -aq -f name=selenium-test-1) ]; then
+        # Si el contenedor existe, verifica si está detenido
+        if [ \$(docker ps -q -f name=selenium-test-1) ]; then
+            echo "El contenedor 'selenium-test-1' ya está en ejecución."
+        else
+            echo "El contenedor 'selenium-test-1' existe pero está detenido. Iniciándolo..."
+            docker start selenium-test-1
+        fi
     else
-        docker run --name selenium-maven-arm-container \
+        # Si el contenedor no existe, créalo
+        echo "El contenedor 'selenium-test-1' no existe. Creándolo..."
+        docker run --name selenium-test-1 \
             --network bridge \
             -v "/var/jenkins_home/workspace/Spring-Petclinic Pipeline:/tests" \
             -d selenium-maven-arm bash
-        docker exec selenium-maven-arm-container bash -c 'cd "/tests/Spring-Petclinic Pipeline" && mvn clean test'
     fi
+
+    # Ejecuta los tests en el contenedor
+    docker exec selenium-test-1 bash -c 'cd "/tests/Spring-Petclinic Pipeline" && mvn clean test'
 """
                 }
             }
