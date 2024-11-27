@@ -25,6 +25,8 @@ services:
     image: selenium-maven-arm
     volumes:
       - "/var/jenkins_home/workspace/Spring-Petclinic Pipeline:/tests"
+    profiles:
+      - automation
     networks:
       - shared-network
 
