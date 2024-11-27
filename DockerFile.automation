@@ -1,0 +1,11 @@
+# Usar una imagen base que incluya un navegador (Chromium en este caso)
+FROM seleniarm/standalone-chromium
+
+# Instalar Maven
+USER root
+RUN apt-get update && \
+    apt-get install -y maven && \
+    apt-get clean
+
+# Cambiar al usuario original de Selenium
+USER seluser

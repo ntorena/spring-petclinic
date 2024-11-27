@@ -37,7 +37,7 @@ pipeline {
                     docker run --rm \
                         --network bridge \
                         -v "/var/jenkins_home/workspace/Spring-Petclinic Pipeline:/tests" \
-                        seleniarm/standalone-chromium \
+                        selenium-maven-arm \
                         bash -c 'cd /tests && mvn clean test'
                     """
                 }
