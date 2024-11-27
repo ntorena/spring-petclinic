@@ -33,7 +33,7 @@ pipeline {
                 echo 'Ejecutando pruebas automatizadas en un contenedor separado...'
                 script {
             sh """
-                docker exec selenium-test-1 bash -c "cd '/tests/Spring-Petclinic Pipeline' && mvn clean test"
+                docker exec spring-petclinic-main-selenium-tests-1 bash -c "cd '/tests/Spring-Petclinic Pipeline' && mvn clean test"
             """
                 }
             }
