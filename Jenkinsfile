@@ -34,12 +34,17 @@ pipeline {
                 script {
                     // Crear contenedor de pruebas dinámicamente
                     sh """
-                    docker run --rm \
-                        --network bridge \
-                        -v "/var/jenkins_home/workspace/Spring-Petclinic Pipeline:/tests" \
-                        selenium-maven-arm \
-                        bash -c 'cd "/tests/Spring-Petclinic Pipeline" && mvn clean test'
-                    """
+    if [ \$(docker ps -aq -f name=selenium-maven-arm-container) ]; then
+        docker start selenium-maven-arm-container
+        docker exec selenium-maven-arm-container bash -c 'cd "/tests/Spring-Petclinic Pipeline" && mvn clean test'
+    else
+        docker run --name selenium-maven-arm-container \
+            --network bridge \
+            -v "/var/jenkins_home/workspace/Spring-Petclinic Pipeline:/tests" \
+            -d selenium-maven-arm bash
+        docker exec selenium-maven-arm-container bash -c 'cd "/tests/Spring-Petclinic Pipeline" && mvn clean test'
+    fi
+"""
                 }
             }
         }
