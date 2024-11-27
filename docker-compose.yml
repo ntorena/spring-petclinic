@@ -21,15 +21,10 @@ services:
     networks:
       - shared-network
 
-  #Servidor de Pruebas Automatizadas
-  test-runner:
-    build:
-      context: .
-      dockerfile: Dockerfile.automationTest
-    environment:
-      TEST_ENV: "integration"
-    profiles:
-      - automation
+  selenium-tests:
+    image: selenium-maven-arm
+    volumes:
+      - "/var/jenkins_home/workspace/Spring-Petclinic Pipeline:/tests"
     networks:
       - shared-network
 

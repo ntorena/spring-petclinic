@@ -38,7 +38,7 @@ pipeline {
                         --network bridge \
                         -v "/var/jenkins_home/workspace/Spring-Petclinic Pipeline:/tests" \
                         selenium-maven-arm \
-                        bash -c 'cd /tests && mvn clean test'
+                        bash -c 'cd "/tests/Spring-Petclinic Pipeline" && mvn clean test'
                     """
                 }
             }
