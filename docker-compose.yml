@@ -20,15 +20,19 @@ services:
       - application
     networks:
       - shared-network
-
-  selenium-tests:
-    image: selenium-maven-arm
-    volumes:
-      - "/var/jenkins_home/workspace/Spring-Petclinic Pipeline:/tests"
+  
+  # Contenedor de Selenium Standalone
+  selenium-chrome:
+    image: seleniarm/standalone-chromium:latest
+    container_name: selenium-chrome
+    ports:
+      - "4444:4444" # Mapea el puerto 4444 para que el Jenkins y las pruebas puedan conectarse
     profiles:
       - automation
     networks:
       - shared-network
+    environment:
+      - SE_NODE_PORT=4444
 
   # Servidor de Jenkins
   jenkins:

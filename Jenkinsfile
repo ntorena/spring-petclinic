@@ -33,7 +33,7 @@ pipeline {
                 echo 'Levantando contenedor Selenium Standalone...'
                 script {
                     sh '''
-                    docker run -d --rm --network bridge --name selenium-chrome -p 4444:4444 seleniarm/standalone-chromium:latest
+                    docker-compose --profile automation -f docker-compose.yml up --build -d
                     '''
                 }
             }
