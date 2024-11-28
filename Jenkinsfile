@@ -44,7 +44,6 @@ pipeline {
                 echo 'Ejecutando pruebas automatizadas...'
                 script {
                     sh '''
-                    cd spring-clinic-test-automation
                     mvn clean test
                     '''
                 }
