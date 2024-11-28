@@ -21,13 +21,6 @@ pipeline {
             }
         }
 
-                stage('Clone Test Repository') {
-            steps {
-                echo 'Clonando el repositorio de pruebas automatizadas...'
-                git branch: 'main', url: 'https://github.com/ntorena/spring-clinic-test-automation.git'
-            }
-        }
-
         stage('Setup Selenium Standalone') {
             steps {
                 echo 'Levantando contenedor Selenium Standalone...'
@@ -36,6 +29,13 @@ pipeline {
                     docker-compose --profile automation -f docker-compose.yml up --build -d selenium-chrome
                     '''
                 }
+            }
+        }
+
+        stage('Clone Test Repository') {
+            steps {
+                echo 'Clonando el repositorio de pruebas automatizadas...'
+                git branch: 'main', url: 'https://github.com/ntorena/spring-clinic-test-automation.git'
             }
         }
 
