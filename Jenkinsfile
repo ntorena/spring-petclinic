@@ -33,7 +33,7 @@ pipeline {
                 echo 'Levantando contenedor Selenium Standalone...'
                 script {
                     sh '''
-                    docker-compose --profile automation -f docker-compose.yml up --build -d
+                    docker-compose --profile automation -f docker-compose.yml up --build -d selenium-chrome
                     '''
                 }
             }
@@ -44,6 +44,7 @@ pipeline {
                 echo 'Ejecutando pruebas automatizadas...'
                 script {
                     sh '''
+                    cd spring-clinic-test-automation
                     mvn clean test
                     '''
                 }
