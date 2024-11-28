@@ -28,30 +28,39 @@ pipeline {
             }
         }
 
-        stage('Run Automated Tests') {
+        stage('Setup Selenium Standalone') {
             steps {
-                echo 'Ejecutando pruebas automatizadas en un contenedor separado...'
+                echo 'Levantando contenedor Selenium Standalone...'
                 script {
-            sh """
-                docker exec spring-petclinic-main-selenium-tests-1 bash -c "cd '/tests/Spring-Petclinic Pipeline' && mvn clean test"
-            """
+                    sh '''
+                    docker run -d --rm --network bridge --name selenium-chrome -p 4444:4444 seleniarm/standalone-chromium:latest
+                    '''
                 }
             }
         }
 
-    //     stage('Run Automated Tests') {
-    //         steps {
-    //             script {
-    //                 git branch: 'main', url: 'https://github.com/ntorena/spring-clinic-test-automation.git'
+        stage('Run Tests') {
+            steps {
+                echo 'Ejecutando pruebas automatizadas...'
+                script {
+                    sh '''
+                    mvn clean test
+                    '''
+                }
+            }
+        }
 
-    //                 echo "Ejecutando pruebas automatizadas con Maven..."
-    //                     sh 'mvn clean test'
-
-    //                 echo "Generando reportes de pruebas..."
-    //                     sh 'mvn surefire-report:report'
-    //         }
-    //     }
-    // }
+        stage('Teardown Selenium') {
+            steps {
+                echo 'Eliminando contenedor de Selenium...'
+                script {
+                    sh '''
+                    docker stop selenium-chrome
+                    docker rm selenium-chrome
+                    '''
+                }
+            }
+        }
 
         stage('Cleanup') {
             steps {
