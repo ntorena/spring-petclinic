@@ -23,8 +23,8 @@ services:
   
   # Contenedor de Selenium Standalone
   selenium-chrome:
-    image: seleniarm/standalone-chromium:latest
-    container_name: selenium-chrome
+    image: seleniarm/standalone-firefox:latest
+    container_name: selenium-firefox
     ports:
       - "4444:4444" # Mapea el puerto 4444 para que el Jenkins y las pruebas puedan conectarse
     profiles:
