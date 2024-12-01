@@ -1,16 +1,11 @@
-# Usar una imagen base que incluya un navegador (Chromium en este caso)
-FROM seleniarm/standalone-chromium
+# Usa la imagen base de Cypress
+FROM cypress/included:latest
 
-# Instalar Maven
-USER root
-RUN apt-get update && \
-    apt-get install -y openjdk-17-jdk maven && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# Configura el directorio de trabajo
+WORKDIR /e2e
 
-# Opcional: establece JAVA_HOME
-ENV JAVA_HOME /usr/lib/jvm/java-17-openjdk-arm64
-ENV PATH $JAVA_HOME/bin:$PATH
+# Copia el proyecto al contenedor
+COPY . .
 
-# Cambiar al usuario original de Selenium
-USER seluser
+# Comando por defecto (puedes sobreescribir con "entrypoint" o "command" en docker-compose)
+ENTRYPOINT ["npx", "cypress", "run"]

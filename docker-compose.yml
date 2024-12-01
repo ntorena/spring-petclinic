@@ -21,19 +21,17 @@ services:
     networks:
       - shared-network
   
-  # Contenedor de Selenium Standalone
-  selenium-chrome:
-    image: seleniarm/standalone-firefox:latest
-    container_name: selenium-firefox
-    ports:
-      - "4444:4444" # Mapea el puerto 4444 para que el Jenkins y las pruebas puedan conectarse
-    profiles:
-      - automation
+  # Contenedor de Cypress
+  cypress:
+    build:
+      context: .
+      dockerfile: DockerFile.automation
     networks:
       - shared-network
-    environment:
-      - SE_NODE_PORT=4444
-
+    profiles:
+      - automation
+    volumes:
+      - /var/jenkins_home/workspace/spring-clinic-automation-cypress:/e2e
   # Servidor de Jenkins
   jenkins:
     image: jenkins/jenkins:lts

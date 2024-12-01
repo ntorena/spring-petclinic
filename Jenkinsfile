@@ -21,46 +21,22 @@ pipeline {
             }
         }
 
-        stage('Setup Selenium Standalone') {
-            steps {
-                echo 'Levantando contenedor Selenium Standalone...'
-                script {
-                    sh '''
-                    docker-compose --profile automation -f docker-compose.yml up --build -d selenium-chrome
-                    '''
-                }
-            }
-        }
-
         stage('Clone Test Repository') {
             steps {
                 echo 'Clonando el repositorio de pruebas automatizadas...'
-                git branch: 'main', url: 'https://github.com/ntorena/spring-clinic-test-automation.git'
+                git branch: 'main', url: 'https://github.com/ntorena/spring-clinic-automation-cypress.git'
             }
         }
 
-        stage('Run Tests') {
+        stage('Run Cypress Tests') {
             steps {
-                echo 'Ejecutando pruebas automatizadas...'
-                script {
-                    sh '''
-                    mvn clean test
-                    '''
+                echo 'Ejecutando pruebas automatizadas en Cypress...'
+                    script {
+                        sh 'docker-compose --profile automation -f docker-compose.yml up --build cypress'
                 }
             }
         }
 
-        stage('Teardown Selenium') {
-            steps {
-                echo 'Eliminando contenedor de Selenium...'
-                script {
-                    sh '''
-                    docker stop selenium-chrome
-                    docker rm selenium-chrome
-                    '''
-                }
-            }
-        }
 
         stage('Cleanup') {
             steps {
