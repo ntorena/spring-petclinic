@@ -1,11 +1,10 @@
 # Usa la imagen base de Cypress
 FROM cypress/included:latest
 
-# Configura el directorio de trabajo
-WORKDIR /e2e
+# Instala Git para clonar el repositorio
+RUN apt-get update && apt-get install -y git && apt-get clean
 
-# Copia el proyecto al contenedor
-COPY . .
+# Clona el repositorio de pruebas automatizadas
+RUN git clone https://github.com/ntorena/spring-clinic-automation-cypress.git
 
-# Comando por defecto (puedes sobreescribir con "entrypoint" o "command" en docker-compose)
-ENTRYPOINT ["npx", "cypress", "run"]
+
