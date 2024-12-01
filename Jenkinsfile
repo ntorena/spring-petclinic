@@ -32,7 +32,7 @@ pipeline {
             steps {
                 echo 'Ejecutando pruebas automatizadas en Cypress...'
                     script {
-                        sh 'docker run --rm -v .:/app -w /app cypress/included'
+                        sh 'docker run --rm -v ${env.WORKSPACE}:/app -w /app cypress/included'
                 }
             }
         }
