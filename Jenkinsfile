@@ -60,10 +60,11 @@ pipeline {
     }
     post {
         always {
-            allure([
-                results: ALLURE_RESULTS
-            ])
-        }
+                    allure includeProperties:
+                     false,
+                     jdk: '',
+                     results: [[path: 'build/allure-results']]
+                }
         success {
             echo 'El pipeline ha finalizado con éxito.'
         }
