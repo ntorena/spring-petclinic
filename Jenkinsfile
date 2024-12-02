@@ -38,6 +38,16 @@ pipeline {
             }
         }
 
+        stage('Generate Allure Report') {
+            steps {
+                script {
+                    allure([
+                        results: ALLURE_RESULTS
+                    ])
+                }
+            }
+        }
+
 
         stage('Cleanup') {
             steps {
@@ -49,6 +59,11 @@ pipeline {
         }
     }
     post {
+        always {
+            allure([
+                results: ALLURE_RESULTS
+            ])
+        }
         success {
             echo 'El pipeline ha finalizado con éxito.'
         }
