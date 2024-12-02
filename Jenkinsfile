@@ -42,7 +42,9 @@ pipeline {
             steps {
                 script {
                     allure([
-                        results: ALLURE_RESULTS
+                        includeProperties: false,
+                        jdk: '',
+                        results: [[path: 'allure-results']]
                     ])
                 }
             }
@@ -63,7 +65,7 @@ pipeline {
                     allure includeProperties:
                      false,
                      jdk: '',
-                     results: [[path: 'build/allure-results']]
+                     results: [[path: 'allure-results']]
                 }
         success {
             echo 'El pipeline ha finalizado con éxito.'
