@@ -20,18 +20,39 @@ services:
       - application
     networks:
       - shared-network
+
+# Servidor Git
+  git-sync:
+    image: alpine/git
+    volumes:
+      - shared-data:/data
+    working_dir: /data
+    entrypoint: |
+      sh -c "
+      if [ ! -d .git ]; then
+        git clone https://github.com/usuario/repositorio.git .
+      else
+        git fetch origin
+        LOCAL=$(git rev-parse @)
+        REMOTE=$(git rev-parse @{u})
+        if [ \"$LOCAL\" != \"$REMOTE\" ]; then
+          git pull
+        fi
+      fi
+      "
+    command: []
+    networks:
+      - shared-network
   
   # Contenedor de Cypress
   cypress:
-    build:
-      context: .
-      dockerfile: DockerFile.automation
-    networks:
-      - shared-network
+    image: cypress/included
+    volumes:
+      - shared-data:/app
+    working_dir: /app
     profiles:
       - automation
-    volumes:
-      - /var/jenkins_home/workspace/spring-clinic-automation-cypress:/e2e
+    
   # Servidor de Jenkins
   jenkins:
     image: jenkins/jenkins:lts
@@ -51,6 +72,7 @@ services:
 
 volumes:
   jenkins_home:
+  shared-data:
 
 networks:
   shared-network:

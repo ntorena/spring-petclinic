@@ -1,10 +1,4 @@
 # Usa la imagen base de Cypress
 FROM cypress/included:latest
 
-# Instala Git para clonar el repositorio
-RUN apt-get update && apt-get install -y git && apt-get clean
-
-# Clona el repositorio de pruebas automatizadas
-RUN git clone https://github.com/ntorena/spring-clinic-automation-cypress.git
-
 
