@@ -38,19 +38,6 @@ pipeline {
             }
         }
 
-        stage('Generate Allure Report') {
-            steps {
-                script {
-                    allure([
-                        includeProperties: false,
-                        jdk: '',
-                        results: [[path: 'allure-results']]
-                    ])
-                }
-            }
-        }
-
-
         stage('Cleanup') {
             steps {
                 echo 'Limpiando recursos antiguos...'
@@ -62,10 +49,10 @@ pipeline {
     }
     post {
         always {
-                    allure includeProperties:
-                     false,
-                     jdk: '',
-                     results: [[path: 'allure-results']]
+                allure includeProperties:
+                    false,
+                    jdk: '',
+                    results: [[path: 'allure-results']]
                 }
         success {
             echo 'El pipeline ha finalizado con éxito.'
