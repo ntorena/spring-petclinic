@@ -27,19 +27,22 @@ services:
     volumes:
       - shared-data:/data
     working_dir: /data
-    entrypoint: |
-      sh -c "
-      if [ ! -d .git ]; then
-        git clone https://github.com/usuario/repositorio.git .
-      else
-        git fetch origin
-        LOCAL=$(git rev-parse @)
-        REMOTE=$(git rev-parse @{u})
-        if [ \"$LOCAL\" != \"$REMOTE\" ]; then
-          git pull
-        fi
-      fi
-      "
+    entrypoint: >
+      sh -c 'if [ ! -d .git ]; then
+              echo "Clonando repositorio..."
+              git clone https://github.com/ntorena/spring-clinic-automation-cypress.git .
+            else
+              echo "El repositorio ya existe. Verificando cambios..."
+              git fetch origin
+              LOCAL=$(git rev-parse @)
+              REMOTE=$(git rev-parse @{u})
+              if [ "$LOCAL" != "$REMOTE" ]; then
+                echo "Actualizando repositorio..."
+                git pull
+              else
+                echo "No hay actualizaciones."
+              fi
+            fi'
     command: []
     networks:
       - shared-network

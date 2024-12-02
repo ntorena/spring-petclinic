@@ -21,10 +21,11 @@ pipeline {
             }
         }
 
-        stage('Clone Test Repository') {
+        stage('Git Sync') {
             steps {
-                echo 'Clonando el repositorio de pruebas automatizadas...'
-                git branch: 'main', url: 'https://github.com/ntorena/spring-clinic-automation-cypress.git'
+                script {
+                    sh 'docker-compose up git-sync'
+                 }
             }
         }
 
@@ -32,7 +33,7 @@ pipeline {
             steps {
                 echo 'Ejecutando pruebas automatizadas en Cypress...'
                     script {
-                        sh 'docker run --rm -v "$WORKSPACE:/app" -w /app cypress/included'
+                        sh 'docker-compose run --rm  cypress'
                 }
             }
         }
