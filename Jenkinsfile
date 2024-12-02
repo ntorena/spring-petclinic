@@ -33,7 +33,7 @@ pipeline {
             steps {
                 echo 'Ejecutando pruebas automatizadas en Cypress...'
                     script {
-                        sh 'docker-compose run --rm  cypress'
+                        sh 'docker-compose run --profile automation up cypress'
                 }
             }
         }
