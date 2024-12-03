@@ -63,6 +63,7 @@ services:
       - "50000:50000"
     volumes:
       - jenkins_home:/var/jenkins_home
+      - shared-data:/shared-data
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker-compose:/usr/bin/docker-compose
     profiles:
