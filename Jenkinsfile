@@ -49,7 +49,7 @@ pipeline {
     }
     post {
         always {
-            sh 'docker cp sspring-petclinicpipeline-cypress-1:/app/allure-results /results'
+            sh 'docker cp spring-petclinicpipeline-cypress-1:/app/allure-results /results'
 
             allure includeProperties: false, jdk: '', results: [[path: 'var/jenkins_home/workspace/results']]
                 }
