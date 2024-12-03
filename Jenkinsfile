@@ -49,9 +49,9 @@ pipeline {
     }
     post {
         always {
-            sh 'docker cp spring-petclinicpipeline-cypress-1:/app/allure-results /results'
+            sh 'docker cp spring-petclinicpipeline-cypress-1:/app/allure-results ${WORKSPACE}/results'
 
-            allure includeProperties: false, jdk: '', results: [[path: 'var/jenkins_home/workspace/results']]
+            allure includeProperties: false, jdk: '', results: [[path: '${WORKSPACE}/results']]
                 }
         success {
             echo 'El pipeline ha finalizado con éxito.'
