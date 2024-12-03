@@ -49,10 +49,9 @@ pipeline {
     }
     post {
         always {
-                allure includeProperties:
-                    false,
-                    jdk: '',
-                    results: [[path: 'allure-results']]
+            sh 'cp -r ./shared-data/allure-results /var/jenkins_home/workspace/results'
+
+            allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
                 }
         success {
             echo 'El pipeline ha finalizado con éxito.'

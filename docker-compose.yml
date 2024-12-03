@@ -21,29 +21,25 @@ services:
     networks:
       - shared-network
 
-# Servidor Git
+  # Servidor Git
   git-sync:
     image: alpine/git
     volumes:
       - shared-data:/data
     working_dir: /data
     entrypoint: >
-      sh -c 'if [ ! -d .git ]; then
-              echo "Clonando repositorio..."
-              git clone https://github.com/ntorena/spring-clinic-automation-cypress.git .
-            else
-              echo "El repositorio ya existe. Verificando cambios..."
-              git fetch origin
-              LOCAL=$(git rev-parse @)
-              REMOTE=$(git rev-parse @{u})
-              if [ "$LOCAL" != "$REMOTE" ]; then
-                echo "Actualizando repositorio..."
-                git pull
-              else
-                echo "No hay actualizaciones."
-              fi
-            fi'
-    command: []
+      sh -c '
+        echo "Iniciando sincronización con Git...";
+        if [ ! -d .git ]; then
+          echo "Clonando repositorio...";
+          git clone https://github.com/ntorena/spring-clinic-automation-cypress.git .
+        else
+          echo "Actualizando repositorio...";
+          git pull
+        fi
+        echo "Archivos en /data después de la sincronización:";
+        ls -la /data
+        '
     networks:
       - shared-network
   
@@ -53,8 +49,12 @@ services:
     volumes:
       - shared-data:/app
     working_dir: /app
+    command: >
+      sh -c "npm install && npx cypress run"
+    networks:
+        - shared-network
     profiles:
-      - automation
+        - automation
     
   # Servidor de Jenkins
   jenkins:
