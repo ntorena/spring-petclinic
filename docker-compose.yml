@@ -49,7 +49,7 @@ services:
     volumes:
       - shared-data:/app
     working_dir: /app
-    entrypoint: sh -c "npm install && npx cypress run"
+    entrypoint: sh -c "rm -rf /app/allure-results && npm install && npx cypress run"
     networks:
         - shared-network
     profiles:
